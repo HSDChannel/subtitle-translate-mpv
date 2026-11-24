@@ -35,12 +35,18 @@ return function (provider, overlay, options)
 		value = value:gsub('\\N', ' \\N '):gsub('\\n', ' \\n ')
 		logger.translator_input(value)
 
-		local ok, data = pcall(provider.translate, value)
+		local cleanValue = value:gsub('{[^}]*}', '')
+		if cleanValue:match('^%s*$') then
+			overlay:hide()
+			return
+		end
+
+		local ok, data = pcall(provider.translate, cleanValue)
 		if not ok then
 			return logger.error(provider.get_error(data))
 		end
 
-		if not data then
+		if not data or data == '' then
 			return logger.warning('Got empty response')
 		end
 

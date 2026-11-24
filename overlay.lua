@@ -47,12 +47,19 @@ return function (options)
 		local text = string.format(
 			'%s%s%s', font, line, font
 		)
-		-- Wrap in a2 if not positional
-		if not string.match(text, '\\pos') then
+		-- Wrap in a2 if not positional and no explicit alignment tag
+		if not string.match(text, '\\pos') and not string.match(text, '\\an%d') then
 			text = string.format('{\\a2}%s{\\a2}', text)
 		end
 
 		return text
+	end
+
+	---Extract the first ASS tag block from a line (e.g. "{\pos(x,y)\b1\c&H...&}")
+	---@param line string
+	---@return string
+	local function extractLeadingTags(line)
+		return line:match('^({[^}]*})') or ''
 	end
 
 	function wrap:reload()
@@ -94,10 +101,13 @@ return function (options)
 			translated, original = original, translated
 		end
 
+		local originalLines = splitLines(original)
+
 		local translatedLines = splitLines(translated)
 		for i, _ in ipairs(translatedLines) do
+			local leadingTags = extractLeadingTags(originalLines[i] or '')
 			translatedLines[i] = string.format('%s%s',
-				wrapLine(translatedLines[i]),
+				wrapLine(leadingTags .. translatedLines[i]),
 				'\n'
 			)
 		end
@@ -108,7 +118,6 @@ return function (options)
 		)
 
 		if not options.translatedOnly then
-			local originalLines = splitLines(original)
 			local mergedLines = {}
 			for i, _ in ipairs(originalLines) do
 				local l = string.format('%s\\N%s%s%s',
