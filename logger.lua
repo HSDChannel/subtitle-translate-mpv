@@ -43,7 +43,7 @@ return function (module)
 			write(msg.error, header, '!!!', ...)
 		end,
 		warning = function (...)
-			write(msg.warning, header, '!', ...)
+			write(msg.warn, header, '!', ...)
 		end,
 	}
 end
