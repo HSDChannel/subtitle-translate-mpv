@@ -32,7 +32,7 @@ git clone --depth 1 https://github.com/EnergoStalin/subtitle-translate-mpv.git
 - Install dependencies described below and make sure they accessible from path
 
 ## :gear:Options
-Avalible options `~~/script-opts/<cloned_folder_name>.conf`([see mp.get_script_name()](https://mpv.io/manual/stable/#lua-scripting-mp-get-script-name())) with default values
+Avalible options `~~/script-opts/<cloned_folder_name>.conf` (non-alphanumeric characters replaced with `_`, e.g. `subtitle_translate_mpv.conf`)([see mp.get_script_name()](https://mpv.io/manual/stable/#lua-scripting-mp-get-script-name())) with default values
 ```cfg
 # Initial subtitle delay for translator
 defaultDelay=-0.5
