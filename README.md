@@ -38,6 +38,8 @@ Avalible options `~~/script-opts/<cloned_folder_name>.conf`([see mp.get_script_n
 defaultDelay=-0.5
 # Which provider to use(see translators folder in repository) or Providers readme section for reference
 translator=Console-Translate
+# Engine used by crow provider: google, yandex, bing, libretranslate or lingva
+crowEngine=google
 # Show only primary text
 translatedOnly=yes
 # Use original text as primary

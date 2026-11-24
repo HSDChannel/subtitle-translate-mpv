@@ -54,17 +54,33 @@ local postprocess = isUnix
 		return (normalize(data):gsub('\\ N', '\\N'))
 	end
 
+local engines = {
+	google = true,
+	yandex = true,
+	bing = true,
+	libretranslate = true,
+	lingva = true,
+}
+
 ---@param from string
 ---@param to string
-return function (from, to)
+---@param options? ScriptOptions
+return function (from, to, options)
 	local codepage = auto(to)
+
+	local engine = (options and options.crowEngine or 'google'):lower()
+	if not engines[engine] then
+		mp.msg.warn('[crow] Unknown engine "' .. engine .. '", falling back to google')
+		engine = 'google'
+	end
 
 	---@type TranslationProvider
 	return {
 		translate = function (value)
 			local commonArgs = {
 				'crow',
-				'-l', from,
+				'-e', engine,
+				'-s', from,
 				'-t', to,
 				'-b',
 			}

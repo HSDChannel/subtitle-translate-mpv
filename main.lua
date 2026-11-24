@@ -10,7 +10,7 @@ local provider = require('modules.translators.' .. o.translator)
 
 ---@type Translator
 local translator = require 'translate' (
-	provider(o.fromLang, o.toLang),
+	provider(o.fromLang, o.toLang, o),
 	overlay,
 	o
 )
@@ -45,4 +45,4 @@ mp.register_script_message('disable-sub-translator',
 	end)
 
 mp.register_script_message('benchmark-sub-translator',
-	require 'benchmark' (provider('en', 'ru')))
+	require 'benchmark' (provider('en', 'ru', o)))

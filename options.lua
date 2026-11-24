@@ -46,6 +46,7 @@ end
 ---@class (exact) ScriptOptions
 ---@field defaultDelay number
 ---@field translator string
+---@field crowEngine string
 ---@field autoEnableTranslator boolean
 ---@field translatedOnly boolean
 ---@field primaryOriginal boolean
@@ -63,6 +64,7 @@ end
 return defineOptions({
 	defaultDelay = -0.5,
 	translator = 'Console-Translate',
+	crowEngine = 'google',
 	autoEnableTranslator = false,
 	translatedOnly = false,
 	primaryOriginal = false,
