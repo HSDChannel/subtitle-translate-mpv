@@ -20,33 +20,27 @@ local function observe(property)
 end
 
 local defineOptions = function (o)
-	local handlers = setmetatable({ ['function'] = function (fn) return fn() end, }, {
-		__index = function ()
-			return function (value)
-				return value
-			end
-		end,
-	})
+	---@type table<string, fun(): string>
+	local getters = {}
 
-	local options = setmetatable(o, {
-		__index = function (self, index)
-			local value = self[index]
-			return handlers[type(value)](value)
-		end,
-	})
+	opt.read_options(o, mp.get_script_name())
 
-
-	opt.read_options(options, mp.get_script_name())
-
-	-- Call hook on observable props if value not overriden from read_options
+	-- Call hook on observable props if value not overriden from read_options.
+	-- Getter is moved out of the table so __index fires and returns its current value.
 	for k, v in pairs(o) do
 		if type(v) == 'table' and v.hook ~= nil and v.get ~= nil then
 			v.hook()
-			o[k] = v.get
+			getters[k] = v.get
+			o[k] = nil
 		end
 	end
 
-	return options
+	return setmetatable(o, {
+		__index = function (_, index)
+			local getter = getters[index]
+			if getter then return getter() end
+		end,
+	})
 end
 
 ---@class (exact) ScriptOptions
